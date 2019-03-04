@@ -4,7 +4,7 @@ const {
   ACCEPT_NOTIFICATION,
   REGENERATE_NOTIFICATION,
   RESOLVE_NOTIFICATION,
-  SET_NEW_NOTIFICATION,
+  UPDATE_NOTIFICATION,
 } = notification;
 
 const initState = {
@@ -16,13 +16,12 @@ const initState = {
 export default function (state = initState, {type, payload}) {
 
   switch (type) {
-    case SET_NEW_NOTIFICATION:
-      const {timestamp} = payload;
+    case UPDATE_NOTIFICATION:
       return ({
         ...state,
         data: {
           ...state.data,
-          [timestamp]: payload,
+          ...payload,
         }
       });
 

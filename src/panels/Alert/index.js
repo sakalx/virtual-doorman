@@ -25,8 +25,8 @@ function AlertPanel({notifications}) {
         <TableBody>
           {Object.values(notifications.data)
             .sort(sortingAlgorithm)
-            .map((alert, index) => (
-              <Alert key={String(index)} notification={alert}/>
+            .map((notification) => (
+              <Alert key={String(notification.id)} notification={notification}/>
             ))}
         </TableBody>
       </Table>

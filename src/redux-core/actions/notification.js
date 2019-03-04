@@ -4,20 +4,20 @@ const {
   ACCEPT_NOTIFICATION,
   REGENERATE_NOTIFICATION,
   RESOLVE_NOTIFICATION,
-  SET_NEW_NOTIFICATION,
+  UPDATE_NOTIFICATION,
 } = notification;
 
-export function setNewNotification(payload) {
+export function updateNotification(payload) {
   return {
-    type: SET_NEW_NOTIFICATION,
+    type: UPDATE_NOTIFICATION,
     payload,
   }
 }
 
-export function acceptNotification(timestamp) {
+export function acceptNotification(id) {
   return {
     type: ACCEPT_NOTIFICATION,
-    payload: timestamp,
+    payload: id,
   }
 }
 

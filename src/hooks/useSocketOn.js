@@ -1,10 +1,8 @@
 import {useEffect} from 'react';
-import socketIOClient from 'socket.io-client';
+import socket from 'root/api/getSocket';
 
 
-export default function ({url, eventKey, callback}) {
-  const socket = socketIOClient(url);
-
+export default function (eventKey, callback) {
   useEffect(() => {
     socket.on(eventKey, callback);
     return () => socket.removeListener(eventKey, callback);

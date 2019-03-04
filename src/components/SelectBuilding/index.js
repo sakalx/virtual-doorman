@@ -17,8 +17,8 @@ function SelectBuilding({building, selectBuilding}) {
   const labelWidth = useLabelWidth(inputLabelRef);
 
   const handleChange = ({target}) => {
-    const name = target.value;
-    selectBuilding(name)
+    const id = target.value;
+    selectBuilding(id)
   };
 
   return (

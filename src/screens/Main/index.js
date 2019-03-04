@@ -1,14 +1,16 @@
 import React, {useEffect} from 'react';
 
+import socket from 'root/api/getSocket';
+
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {getBuildingData} from 'root/redux-core/actions/building';
 import {getOperatorsInfo} from 'root/redux-core/actions/operator';
-import {setNewNotification} from 'root/redux-core/actions/notification';
+import {updateNotification} from 'root/redux-core/actions/notification';
 
-import useSocket from 'root/hooks/useSocket';
-import {notificationSocketURL} from 'root/api/sockets';
+import useSocketOn from 'root/hooks/useSocketOn';
 
+import Button from '@material-ui/core/Button';
 import Slide from '@material-ui/core/Slide';
 
 import NavigationPanel from 'root/panels/Navigation';
@@ -22,44 +24,25 @@ import {
   MainSection,
 } from './style';
 
-
 function MainScreen({
                       getBuildingData,
                       getOperatorsInfo,
-                      setNewNotification,
+                      updateNotification,
                     }) {
 
   useEffect(() => {
     // COLLECT DATA
     getBuildingData();
     getOperatorsInfo();
-
-    // Dummy: Post to server new notification and emit notification-socket
-    fetch('http://104.248.110.70:3000/newnotification', {
-      method: 'post',
-      body: _createTestNotification(),
-    });
-    console.log(_createTestNotification());
   }, []);
 
-
-/*  app.post('/notification', function (req, res) {
-    const notification = JSON.parse(req.body);
-    const id = notification.id;
-    notificationDB[id] = newNotification;
-
-    io.sockets.emit('notification', notificationDB);
-    res.sendStatus(200);
-  });
-  */
-
-
   // Listening notification-socket
-  useSocket({
-    url: notificationSocketURL,
-    eventKey: 'notification',
-    callback: _addNewNotification,
-  });
+  useSocketOn('notifications list', _updateNotification,);
+
+  const handleAddNewNotification = () => {
+    const newDummyNotification = _createTestNotification();
+    socket.emit('new notification', newDummyNotification);
+  };
 
   function _createTestNotification() {
     const uuidv4 = () =>
@@ -69,31 +52,30 @@ function MainScreen({
 
     const dummyNotification = {
       id: uuidv4(),
-      acceptedCallTime: null, //attended
-      alarmType: 'VDM CALL',
-      building: {
-        id: 165,
-        name: 'Building 003 - 82 Irving Place',
-      },
-      doorStation: 'front door',
-      operator: {
-        id: 120,
-        name: 'mandrewso',
-      },
-      resolvedCallTime: null,
-      timestamp: +new Date(),
+      accepted_time: null,
+      alarm_type: 'VDM CALL',
+      building_id: 165,
+      building_name: 'Building 003 - 82 Irving Place',
+      door_station: 'front door',
+      operator_id: 120,
+      operator_name: 'mandrewso',
+      resolved_time: null,
+      timestamp: String(+new Date()),
     };
 
     return dummyNotification;
   }
 
-  function _addNewNotification(data) {
-    console.log('Socket alerts', data);
-    //setNewNotification(data);
+  function _updateNotification(data) {
+    updateNotification(data);
   }
 
   return (
     <main>
+
+      <Button color='secondary' onClick={handleAddNewNotification}>
+        Add new notification
+      </Button>
 
       <Slide direction='right' in={true} mountOnEnter>
         <NavigationPanel/>
@@ -120,7 +102,7 @@ function MainScreen({
 const mapDispatchToProps = dispatch => bindActionCreators({
   getBuildingData,
   getOperatorsInfo,
-  setNewNotification,
+  updateNotification,
 }, dispatch);
 
 export default connect(null, mapDispatchToProps)(MainScreen);
