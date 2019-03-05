@@ -79,8 +79,8 @@ io.on('connection', function (socket) {
 
   socket.on(socketEvent.newNotification, function (notification) {
     const uid = notification.id;
-
     notifications[uid] = notification;
+
     io.sockets.emit(socketEvent.notification, {[uid]: notification});
 
     insertToTable({
@@ -116,6 +116,7 @@ io.on('connection', function (socket) {
         const notification = {
           [uid]: {...data},
         };
+
         Object.assign(notifications, notification);
       })
       .on('end', function () {
