@@ -1,6 +1,6 @@
 import {notification} from '../types';
 
-import socket from 'root/api/getSocket';
+import socket, {socketEvent} from 'root/api/getSocket';
 
 const {
   ACCEPT_NOTIFICATION,
@@ -16,14 +16,12 @@ export function setNotification(payload) {
   }
 }
 
-export function acceptNotification(id) {
+export function acceptNotification(uid) {
   const payload = {
-    uid: id,
-    column: 'accepted_time',
-    value: String(+new Date()),
+    'accepted_time': String(+new Date()),
   };
 
-  socket.emit('update notification', payload);
+  socket.emit(socketEvent.updateNotification, {uid, payload});
 
   return {
     type: ACCEPT_NOTIFICATION,
@@ -31,28 +29,24 @@ export function acceptNotification(id) {
   }
 }
 
-export function resolveNotification(id) {
+export function resolveNotification(uid) {
   const payload = {
-    uid: id,
-    column: 'resolved_time',
-    value: String(+new Date()),
+    'resolved_time': String(+new Date()),
   };
 
-  socket.emit('update notification', payload);
+  socket.emit(socketEvent.updateNotification, {uid, payload});
 
   return {
     type: RESOLVE_NOTIFICATION,
 }
 }
 
-export function regeneratedNotification(id) {
+export function regeneratedNotification(uid) {
   const payload = {
-    uid: id,
-    column: 'accepted_time',
-    value: null,
+    'accepted_time': null,
   };
 
-  socket.emit('update notification', payload);
+  socket.emit(socketEvent.updateNotification, {uid, payload});
 
   return {
     type: REGENERATE_NOTIFICATION,

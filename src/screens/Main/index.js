@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 
-import socket from 'root/api/getSocket';
+import socket, {socketEvent} from 'root/api/getSocket';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -37,11 +37,11 @@ function MainScreen({
   }, []);
 
   // Listening notification-socket
-  useSocketOn('notification', _setNotification);
+  useSocketOn(socketEvent.notification, _setNotification);
 
   const handleAddNewNotification = () => {
     const newDummyNotification = _createTestNotification();
-    socket.emit('add notification', newDummyNotification);
+    socket.emit(socketEvent.newNotification, newDummyNotification);
   };
 
   function _createTestNotification() {
