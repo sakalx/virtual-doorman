@@ -25,7 +25,7 @@ export function acceptNotification(uid) {
 
   return {
     type: ACCEPT_NOTIFICATION,
-    payload: id,
+    payload: uid,
   }
 }
 
