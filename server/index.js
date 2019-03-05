@@ -3,7 +3,6 @@ const http = require('http').Server(app);
 const mysql = require('mysql');
 const io = require('socket.io')(http);
 
-// Define db creds
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -11,58 +10,69 @@ const db = mysql.createConnection({
   database: 'vdmdb'
 });
 
-// Log any errors connected to the db
 db.connect(function (error) {
   if (error) throw error;
   console.log('Connected db');
 });
 
-// Define/initialize global vars
+
 const notifications = {};
 let isInitNotification = false;
 
-
-// Socket
+// [TODO] handel reconnect sockets if any errors
+// [TODO] handel errors from db
+// [TODO] handle unic user connected
+// [TODO] function for:
+//  1. tracking resolved calls by 'resolved_time' property
+//  2. if we got 50 resolved calls
+//  2.1. save those calls in file
+//  2.2. remove those calls from glob variable 'notifications' && db
+//  2.3. emit socket 'notifications list'
 io.on('connection', function (socket) {
   console.log('New Socket connected');
 
-  // Listening for new notification
-  socket.on('new notification', function (notification) {
-    const id = notification.id;
+  socket.on('add notification', function (notification) {
+    const uid = notification.id;
 
-    // Add new notification added
-    notifications[id] = notification;
-    // Push to all sockets
-    io.sockets.emit('notifications list', notifications);
+    notifications[uid] = notification;
+    io.sockets.emit('notification', {[uid]: notification});
 
-    // Insert into db
     const sql = 'INSERT INTO notification SET ?';
     db.query(sql, notification, function (error) {
       if (error) throw error;
-      console.log('Notification inserted to db')
+      console.log('Notification going to db')
     });
   });
 
-  // Check to see if initial notification are set
-  if (isInitNotification) {
-    // Initial notification already exist, send out
-    socket.emit('notifications list', notifications);
-  } else {
-    // Initial app start, run db query
-    const sql = 'SELECT * FROM notification';
+  socket.on('update notification', function ({uid, column, value}) {
+    notifications[uid][column] = value;
+    notifications[uid][column] = value;
+    io.sockets.emit('notification', {[uid]: notifications[uid]});
 
+
+    const sql = `UPDATE notification SET ${column} = ? WHERE id = ?`;
+
+    db.query(sql, [value, uid], function (error) {
+      if (error) throw error;
+      console.log('Updated notification going to db');
+    });
+
+  });
+
+  if (isInitNotification) {
+    socket.emit('notification', notifications);
+  } else {
+    const sql = 'SELECT * FROM notification';
     db.query(sql)
       .on('result', function (data) {
-        // Push results onto the notifications object
-        const id = data.id;
+        const uid = data.id;
         const notification = {
-          [id]: {...data},
+          [uid]: {...data},
         };
         Object.assign(notifications, notification);
       })
       .on('end', function () {
-        // Only emit notes after query has been completed
-        socket.emit('notifications list', notifications)
+        socket.emit('notification', notifications)
       });
 
     isInitNotification = true;

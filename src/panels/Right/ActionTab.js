@@ -24,7 +24,7 @@ function ActionTab({
                    }) {
 
   const handleRegenerateAlarm = () => {
-    regeneratedNotification();
+    regeneratedNotification(notifications.selected);
   };
 
   const isDisabled = !notifications.selected;

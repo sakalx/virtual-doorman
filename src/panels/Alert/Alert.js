@@ -33,8 +33,7 @@ function Alert({
     selectBuilding(notification.building_id);
   };
 
-  //const isSelected = notification.acceptedCallTime > 0 && notification.resolvedCallTime === null;
-  const isSelected = selected === notification.id;
+  const isSelected = notification.accepted_time > 0 && notification.resolved_time === null;
 
   return (
     <Row
@@ -52,7 +51,7 @@ function Alert({
       <Cell>{getDurationCall()}</Cell>
       <Cell>{notification.alarm_type}</Cell>
       <Cell style={{minWidth: 90}}>
-        {isSelected && (
+        {selected === notification.id && (
           <CloseButton notification={notification}/>
         )}
       </Cell>

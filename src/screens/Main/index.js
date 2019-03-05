@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {getBuildingData} from 'root/redux-core/actions/building';
 import {getOperatorsInfo} from 'root/redux-core/actions/operator';
-import {updateNotification} from 'root/redux-core/actions/notification';
+import {setNotification} from 'root/redux-core/actions/notification';
 
 import useSocketOn from 'root/hooks/useSocketOn';
 
@@ -27,7 +27,7 @@ import {
 function MainScreen({
                       getBuildingData,
                       getOperatorsInfo,
-                      updateNotification,
+                      setNotification,
                     }) {
 
   useEffect(() => {
@@ -37,11 +37,11 @@ function MainScreen({
   }, []);
 
   // Listening notification-socket
-  useSocketOn('notifications list', _updateNotification,);
+  useSocketOn('notification', _setNotification);
 
   const handleAddNewNotification = () => {
     const newDummyNotification = _createTestNotification();
-    socket.emit('new notification', newDummyNotification);
+    socket.emit('add notification', newDummyNotification);
   };
 
   function _createTestNotification() {
@@ -66,8 +66,8 @@ function MainScreen({
     return dummyNotification;
   }
 
-  function _updateNotification(data) {
-    updateNotification(data);
+  function _setNotification(data) {
+    setNotification(data);
   }
 
   return (
@@ -102,7 +102,7 @@ function MainScreen({
 const mapDispatchToProps = dispatch => bindActionCreators({
   getBuildingData,
   getOperatorsInfo,
-  updateNotification,
+  setNotification,
 }, dispatch);
 
 export default connect(null, mapDispatchToProps)(MainScreen);
