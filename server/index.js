@@ -3,6 +3,7 @@ const http = require('http').Server(app);
 const mysql = require('mysql');
 const io = require('socket.io')(http);
 
+// Connecting to SQL
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -15,54 +16,100 @@ db.connect(function (error) {
   console.log('Connected db');
 });
 
-
+// [Glob] variables :
 const notifications = {};
 let isInitNotification = false;
 
-// [TODO] handel reconnect sockets if any errors
-// [TODO] handel errors from db
-// [TODO] handle unic user connected
-// [TODO] function for:
-//  1. tracking resolved calls by 'resolved_time' property
-//  2. if we got 50 resolved calls
-//  2.1. save those calls in file
-//  2.2. remove those calls from glob variable 'notifications' && db
-//  2.3. emit socket 'notifications list'
+// [Socket] list of events :
+const socketEvent = {
+  newNotification: 'new notification',
+  updateNotification: 'update notification',
+  notification: 'notification',
+};
+
+// [SQL] list of tables :
+const table = {
+  notifications: 'notification',
+};
+
+
+// [SQL] INSERT to table :
+function getSqlInsertToTable(table) {
+  return `INSERT INTO ${table} SET ?`;
+}
+
+function insertToTable({table, payload}) {
+  const sql = getSqlInsertToTable(table);
+
+  db.query(sql, payload, function (error) {
+    if (error) throw error;
+    console.log('New data going to db');
+  });
+}
+
+// [SQL] UPDATE date in table by id :
+function getSqlUpdateTable(table, payload) {
+  // payload = {foo: 1, bar: 3}
+  const sqlColumns = Object.keys(payload).reduce((acc, next) =>
+    acc + `${next} = ?, `, '').slice(0, -2); //foo = ?, bar = ?
+
+  const sql = `UPDATE ${table} SET ${sqlColumns} WHERE id = ?`;
+  const values = Object.values(payload); // [1, 3]
+  return [sql, values];
+}
+
+function updateTableById({table, uid, payload}) {
+  const [sql, values] = getSqlUpdateTable(table, payload);
+  values.push(uid);
+
+  db.query(sql, values, function (error) {
+    if (error) throw error;
+    console.log('Updating going to db');
+  });
+}
+
+// [SQL] SELECT all data from table :
+function getSqlSelectAllFromTable(table) {
+  return `SELECT * FROM ${table}`;
+}
+
+
 io.on('connection', function (socket) {
   console.log('New Socket connected');
 
-  socket.on('add notification', function (notification) {
+  socket.on(socketEvent.newNotification, function (notification) {
     const uid = notification.id;
 
     notifications[uid] = notification;
-    io.sockets.emit('notification', {[uid]: notification});
+    io.sockets.emit(socketEvent.notification, {[uid]: notification});
 
-    const sql = 'INSERT INTO notification SET ?';
-    db.query(sql, notification, function (error) {
-      if (error) throw error;
-      console.log('Notification going to db')
+    insertToTable({
+      table: table.notifications,
+      payload: notification,
     });
   });
 
-  socket.on('update notification', function ({uid, column, value}) {
-    notifications[uid][column] = value;
-    notifications[uid][column] = value;
-    io.sockets.emit('notification', {[uid]: notifications[uid]});
-
-
-    const sql = `UPDATE notification SET ${column} = ? WHERE id = ?`;
-
-    db.query(sql, [value, uid], function (error) {
-      if (error) throw error;
-      console.log('Updated notification going to db');
+  socket.on(socketEvent.updateNotification, function ({uid, payload}) {
+    const updatedNotification = notifications[uid];
+    // Updating glob variable notifications by id
+    Object.entries(payload).forEach(([key, value]) => {
+      updatedNotification[key] = value;
     });
 
+    io.sockets.emit(socketEvent.notification, {[uid]: updatedNotification});
+
+    updateTableById({
+      table: table.notifications,
+      uid,
+      payload,
+    });
   });
 
   if (isInitNotification) {
-    socket.emit('notification', notifications);
+    socket.emit(socketEvent.notification, notifications);
   } else {
-    const sql = 'SELECT * FROM notification';
+    const sql = getSqlSelectAllFromTable(table.notifications);
+
     db.query(sql)
       .on('result', function (data) {
         const uid = data.id;
@@ -72,7 +119,7 @@ io.on('connection', function (socket) {
         Object.assign(notifications, notification);
       })
       .on('end', function () {
-        socket.emit('notification', notifications)
+        socket.emit(socketEvent.notification, notifications)
       });
 
     isInitNotification = true;
@@ -88,3 +135,14 @@ io.on('connection', function (socket) {
 http.listen(8000, function () {
   console.log('listening on *:8000');
 });
+
+
+// [TODO] handel reconnect sockets if any errors
+// [TODO] handel errors from db
+// [TODO] handle unic user connected
+// [TODO] function for:
+//  1. tracking resolved calls by 'resolved_time' property
+//  2. if we got 50 resolved calls
+//  2.1. save those calls in file
+//  2.2. remove those calls from glob variable 'notifications' && db
+//  2.3. emit socket 'notifications list'
