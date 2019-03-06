@@ -75,7 +75,7 @@ function getSqlSelectAllFromTable(table) {
 
 
 io.on('connection', function (socket) {
-  console.log('New Socket connected');
+  console.log('New Socket connected', socket.id);
 
   // Socket listening new notification
   socket.on(socketEvent.newNotification, function (notification) {
@@ -84,7 +84,7 @@ io.on('connection', function (socket) {
     notifications[uid] = notification;
 
     // Push notification to sockets
-    io.sockets.emit(socketEvent.notification, {[uid]: notification});
+    io.emit(socketEvent.notification, {[uid]: notification});
 
     // Insert notification to SQL
     insertToTable({
@@ -103,7 +103,7 @@ io.on('connection', function (socket) {
     });
 
     // Push notification to sockets
-    io.sockets.emit(socketEvent.notification, {[uid]: updatedNotification});
+    io.emit(socketEvent.notification, {[uid]: updatedNotification});
 
     // Update notification in SQL
     updateTableById({
@@ -137,7 +137,7 @@ io.on('connection', function (socket) {
 
 
   socket.on('disconnect', function () {
-    console.log('Some socket disconnected');
+    console.log('Socket disconnected', socket.id);
   });
 });
 
