@@ -4,12 +4,21 @@ const mysql = require('mysql');
 const io = require('socket.io')(http);
 
 // Connecting to SQL
-const db = mysql.createConnection({
+/*const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '2015My0234$',
   database: 'vdmdb'
+}); */
+
+const db = mysql.createConnection({
+  host: '127.0.0.1',
+  port: "8889",
+  user: 'root',
+  password: 'root',
+  database: 'testDB'
 });
+
 
 db.connect(function (error) {
   if (error) throw error;
