@@ -1,7 +1,6 @@
 import socketIOClient from 'socket.io-client';
 
-//const url = 'http://localhost:8000';
-const url = 'http://104.248.110.70:3001';
+const url = 'http://localhost:8000';
 
 // Socket events :
 export const eventName = {
