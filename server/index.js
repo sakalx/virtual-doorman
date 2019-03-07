@@ -4,23 +4,12 @@ const mysql = require('mysql');
 const io = require('socket.io')(http);
 
 // Connecting to SQL
-/*var db = mysql.createConnection({
-  //host: '104.248.110.70',
-  host: '127.0.0.1',
-  port: "3306",
-  user: 'root',
-  password: 'n0pa55',
-  database: 'vdmdb'
-}); */
-
 const db = mysql.createConnection({
-  host: '127.0.0.1',
-  port: "8889",
+  host: 'localhost',
   user: 'root',
-  password: 'root',
-  database: 'testDB'
-});  
-
+  password: '2015My0234$',
+  database: 'vdmdb'
+});
 
 db.connect(function (error) {
   if (error) throw error;
@@ -29,7 +18,7 @@ db.connect(function (error) {
 
 // [Glob] variables :
 const notifications = {};
-let isInitNotifications = false;
+let isInitNotification = false;
 
 // [Socket] list of events :
 const socketEvent = {
@@ -86,37 +75,29 @@ function getSqlSelectAllFromTable(table) {
 
 
 io.on('connection', function (socket) {
-  console.log('New Socket connected', socket.id);
+  console.log('New Socket connected');
 
-  // Socket listening new notification
   socket.on(socketEvent.newNotification, function (notification) {
-    // Save to glob variable [notifications]
     const uid = notification.id;
     notifications[uid] = notification;
 
-    // Push notification to sockets
-    io.emit(socketEvent.notification, {[uid]: notification});
+    io.sockets.emit(socketEvent.notification, {[uid]: notification});
 
-    // Insert notification to SQL
     insertToTable({
       table: table.notifications,
       payload: notification,
     });
   });
 
-
-  // Socket listening any updates notification
   socket.on(socketEvent.updateNotification, function ({uid, payload}) {
-    // Updating glob variable [notifications] by id
     const updatedNotification = notifications[uid];
+    // Updating glob variable notifications by id
     Object.entries(payload).forEach(([key, value]) => {
       updatedNotification[key] = value;
     });
 
-    // Push notification to sockets
-    io.emit(socketEvent.notification, {[uid]: updatedNotification});
+    io.sockets.emit(socketEvent.notification, {[uid]: updatedNotification});
 
-    // Update notification in SQL
     updateTableById({
       table: table.notifications,
       uid,
@@ -124,8 +105,7 @@ io.on('connection', function (socket) {
     });
   });
 
-  // Initialization notifications on server from SQL and push to sockets
-  if (isInitNotifications) {
+  if (isInitNotification) {
     socket.emit(socketEvent.notification, notifications);
   } else {
     const sql = getSqlSelectAllFromTable(table.notifications);
@@ -143,12 +123,12 @@ io.on('connection', function (socket) {
         socket.emit(socketEvent.notification, notifications)
       });
 
-    isInitNotifications = true;
+    isInitNotification = true;
   }
 
 
   socket.on('disconnect', function () {
-    console.log('Socket disconnected', socket.id);
+    console.log('Some socket disconnected');
   });
 });
 
