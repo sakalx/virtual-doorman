@@ -18,7 +18,7 @@ db.connect(function (error) {
 
 // [Glob] variables :
 const notifications = {};
-let isInitNotification = false;
+let isInitNotifications = false;
 
 // [Socket] list of events :
 const socketEvent = {
@@ -77,27 +77,35 @@ function getSqlSelectAllFromTable(table) {
 io.on('connection', function (socket) {
   console.log('New Socket connected');
 
+  // Socket listening new notification
   socket.on(socketEvent.newNotification, function (notification) {
+    // Save to glob variable [notifications]
     const uid = notification.id;
     notifications[uid] = notification;
 
+    // Push notification to sockets
     io.sockets.emit(socketEvent.notification, {[uid]: notification});
 
+    // Insert notification to SQL
     insertToTable({
       table: table.notifications,
       payload: notification,
     });
   });
 
+
+  // Socket listening any updates notification
   socket.on(socketEvent.updateNotification, function ({uid, payload}) {
+    // Updating glob variable [notifications] by id
     const updatedNotification = notifications[uid];
-    // Updating glob variable notifications by id
     Object.entries(payload).forEach(([key, value]) => {
       updatedNotification[key] = value;
     });
 
+    // Push notification to sockets
     io.sockets.emit(socketEvent.notification, {[uid]: updatedNotification});
 
+    // Update notification in SQL
     updateTableById({
       table: table.notifications,
       uid,
@@ -105,7 +113,8 @@ io.on('connection', function (socket) {
     });
   });
 
-  if (isInitNotification) {
+  // Initialization notifications on server from SQL and push to sockets
+  if (isInitNotifications) {
     socket.emit(socketEvent.notification, notifications);
   } else {
     const sql = getSqlSelectAllFromTable(table.notifications);
@@ -123,7 +132,7 @@ io.on('connection', function (socket) {
         socket.emit(socketEvent.notification, notifications)
       });
 
-    isInitNotification = true;
+    isInitNotifications = true;
   }
 
 
