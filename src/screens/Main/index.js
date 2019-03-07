@@ -1,14 +1,12 @@
 import React, {useEffect} from 'react';
 
-import socket, {socketEvent} from 'root/api/getSocket';
-
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {getBuildingData} from 'root/redux-core/actions/building';
 import {getOperatorsInfo} from 'root/redux-core/actions/operator';
 import {setNotification} from 'root/redux-core/actions/notification';
 
-import useSocketOn from 'root/hooks/useSocketOn';
+import socketClient, {eventName} from 'root/api/socket';
 
 import Button from '@material-ui/core/Button';
 import Slide from '@material-ui/core/Slide';
@@ -31,17 +29,20 @@ function MainScreen({
                     }) {
 
   useEffect(() => {
+    const _setNotification = data => setNotification(data);
+
     // COLLECT DATA
     getBuildingData();
     getOperatorsInfo();
-  }, []);
 
-  // Listening notification-socket
-  useSocketOn(socketEvent.notification, _setNotification);
+    // Listening notification-socket
+    socketClient.on(eventName.notification, _setNotification);
+    return () => socketClient.removeListener(eventName.notification, _setNotification);
+  }, []);
 
   const handleAddNewNotification = () => {
     const newDummyNotification = _createTestNotification();
-    socket.emit(socketEvent.newNotification, newDummyNotification);
+    socketClient.emit(eventName.newNotification, newDummyNotification);
   };
 
   function _createTestNotification() {
@@ -64,10 +65,6 @@ function MainScreen({
     };
 
     return dummyNotification;
-  }
-
-  function _setNotification(data) {
-    setNotification(data);
   }
 
   return (

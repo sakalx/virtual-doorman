@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {logOutUser} from 'root/redux-core/actions/auth';
 
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 import {
   Container,
@@ -12,7 +13,7 @@ import {
 } from './style';
 
 
-function NavigationPanel({logOutUser}) {
+function NavigationPanel({user, logOutUser}) {
   return (
     <Container component={'nav'} square={true} elevation={1}>
       <NavigationContainer>
@@ -26,13 +27,26 @@ function NavigationPanel({logOutUser}) {
         <Button color={'primary'}>Help</Button>
       </NavigationContainer>
 
+      <Typography
+        color='secondary'
+        component='h3'
+        style={{padding: '5px 12px'}}
+        variant='button'
+      >
+        {user.LOGIN_NAME}
+      </Typography>
+
       <Button color={'primary'} onClick={logOutUser}>Logout</Button>
     </Container>
   )
 }
 
+const mapStateToProps = ({auth: {user}}) => ({
+  user,
+});
+
 const mapDispatchToProps = dispatch => bindActionCreators({
   logOutUser,
 }, dispatch);
 
-export default connect(null, mapDispatchToProps)(NavigationPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(NavigationPanel);
