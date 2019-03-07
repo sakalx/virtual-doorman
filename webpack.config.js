@@ -137,7 +137,7 @@ const config = {
   },
 
   devServer: {
-    port: 3000,
+    port: 3099,
     open: true,
     inline: true,
     historyApiFallback: true,

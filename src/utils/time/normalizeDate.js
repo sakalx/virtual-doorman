@@ -1,7 +1,7 @@
 export default function(time) {
-  if (typeof time !== 'number') return 'pending';
+  if (time === null) return 'pending';
 
-  const date = new Date(time);
+  const date = new Date(+time);
   const normalizedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
   return normalizedDate
 }

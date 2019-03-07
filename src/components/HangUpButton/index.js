@@ -16,7 +16,7 @@ function HangUpButton({
                       }) {
 
   const handleHangUp = () => {
-    resolveNotification();
+    resolveNotification(selected);
   };
 
   return (

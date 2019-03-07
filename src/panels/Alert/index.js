@@ -14,8 +14,8 @@ import {
 function AlertPanel({notifications}) {
 
   const sortingAlgorithm = (curr, next) => {
-    if (!curr.acceptedCallTime) return -1;
-    return curr.resolvedCallTime - next.resolvedCallTime
+    if (!curr.accepted_time) return -1;
+    return curr.resolved_time - next.resolved_time;
   };
 
   return (
@@ -25,8 +25,8 @@ function AlertPanel({notifications}) {
         <TableBody>
           {Object.values(notifications.data)
             .sort(sortingAlgorithm)
-            .map((alert, index) => (
-              <Alert key={String(index)} notification={alert}/>
+            .map((notification) => (
+              <Alert key={String(notification.id)} notification={notification}/>
             ))}
         </TableBody>
       </Table>

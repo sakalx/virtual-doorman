@@ -9,11 +9,12 @@ import Button from '@material-ui/core/Button';
 
 function CloseButton({
                        notification,
+                       notifications,
                        resolveNotification,
                      }) {
 
   const handleEndCall = () => {
-    resolveNotification();
+    resolveNotification(notifications.selected);
   };
 
   return (
@@ -28,8 +29,13 @@ function CloseButton({
   )
 }
 
+const mapStateToProps = ({notifications}) => ({
+  notifications,
+});
+
+
 const mapDispatchToProps = dispatch => bindActionCreators({
   resolveNotification,
 }, dispatch);
 
-export default connect(null, mapDispatchToProps)(CloseButton);
+export default connect(mapStateToProps, mapDispatchToProps)(CloseButton);

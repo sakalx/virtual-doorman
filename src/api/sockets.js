@@ -1,1 +1,0 @@
-export const notificationSocketURL  = 'http://104.248.110.70:3000/';

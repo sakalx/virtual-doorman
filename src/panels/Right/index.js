@@ -2,7 +2,6 @@ import React from 'react';
 
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
-import {connect} from "react-redux";
 
 import ActionTab from './ActionTab';
 import DeviceMonitorTab from './DeviceMonitorTab';

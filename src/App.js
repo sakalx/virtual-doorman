@@ -1,14 +1,18 @@
 import React, {useEffect} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import {bindActionCreators} from "redux";
 import PrivateRoute from 'root/components/PrivateRoute'
 
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {logInUser} from 'root/redux-core/actions/auth';
+
+import socketClient from 'root/api/socket';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import MainScreen from './screens/Main';
+
+socketClient.connect();
 
 
 function App({auth, logInUser}) {

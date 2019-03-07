@@ -22,43 +22,36 @@ function Alert({
                }) {
 
   const getDurationCall = () => {
-    const durationCall = notification.resolvedCallTime - notification.acceptedCallTime;
+    const durationCall = notification.resolved_time - notification.accepted_time;
     return time.millisToMinutesAndSeconds(durationCall);
   };
 
   const handleSelectAlert = () => {
     if (selected) return;
 
-    // Post to server updated notification and emit notification-socket
-    fetch('http://104.248.110.70:3000/updatenotification', {
-      method: 'post',
-      body: JSON.stringify(notification),
-    });
-
-    acceptNotification(notification.timestamp);
-    selectBuilding(notification.building.id);
+    acceptNotification(notification.id);
+    selectBuilding(notification.building_id);
   };
 
-  //const isSelected = notification.acceptedCallTime > 0 && notification.resolvedCallTime === null;
-  const isSelected = selected === notification.timestamp;
+  const isSelected = notification.accepted_time > 0 && notification.resolved_time === null;
 
   return (
     <Row
       onDoubleClick={handleSelectAlert}
       status={{
-        pending: notification.acceptedCallTime === null,
+        pending: notification.accepted_time === null,
         selected: isSelected,
       }}
     >
       <Cell>{time.normalizeDate(notification.timestamp)}</Cell>
-      <Cell>{notification.building.name}</Cell>
-      <Cell>{notification.doorStation}</Cell>
-      <Cell>{notification.operator.name}</Cell>
-      <Cell>{time.normalizeDate(notification.acceptedCallTime)}</Cell>
+      <Cell>{notification.building_name}</Cell>
+      <Cell>{notification.door_station}</Cell>
+      <Cell>{notification.operator_name}</Cell>
+      <Cell>{time.normalizeDate(notification.accepted_time)}</Cell>
       <Cell>{getDurationCall()}</Cell>
-      <Cell>{notification.alarmType}</Cell>
+      <Cell>{notification.alarm_type}</Cell>
       <Cell style={{minWidth: 90}}>
-        {isSelected && (
+        {selected === notification.id && (
           <CloseButton notification={notification}/>
         )}
       </Cell>
