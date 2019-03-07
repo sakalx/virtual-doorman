@@ -1,7 +1,7 @@
 module.exports = function (io, notificationsStorage) {
 
-  const eventName = require('./eventNames');
-  const sql = require('../sql');
+  const eventName = require('../eventNames');
+  const sql = require('../../sql');
 
   let isInitNotifications = false;
 

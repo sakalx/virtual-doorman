@@ -5,9 +5,9 @@ module.exports = function (server) {
   // [Glob] variables :
   const notificationsStorage = {};
 
-  const onNewNotification = require('./onNewNotification')(io, notificationsStorage);
-  const onUpdateNotification = require('./onUpdateNotification')(io, notificationsStorage);
-  const initNotifications = require('./initNotifications')(io, notificationsStorage);
+  const onNewNotification = require('./notifications/onNew')(io, notificationsStorage);
+  const onUpdateNotification = require('./notifications/onUpdate')(io, notificationsStorage);
+  const initNotifications = require('./notifications/initialization')(io, notificationsStorage);
 
 
   io.on('connection', function (socket) {
