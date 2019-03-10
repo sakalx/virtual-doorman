@@ -1,9 +1,10 @@
 const app = require('express')();
-const http = require('http').Server(app);
+const server = require('http').Server(app);
 
-require('./modules/socket')(http);
+// Connect socket.io to server
+require('./modules/socket-module')(server);
 
-http.listen(8000, function () {
+server.listen(8000, function () {
   console.log('listening on *:8000');
 });
 
@@ -16,3 +17,5 @@ http.listen(8000, function () {
 //  2.1. save those calls in file
 //  2.2. remove those calls from glob variable 'notifications' && db
 //  2.3. emit socket 'notifications list'
+
+// [TODO] validation incoming data from sockets !!!

@@ -1,9 +1,9 @@
-import {authentication} from '../types';
+import {userActionsTypes} from '../types';
 
 const {
-  LOADING_AUTH,
+  LOADING_USER,
   LOG_IN,
-} = authentication;
+} = userActionsTypes;
 
 const initState = {
   user: null,
@@ -14,14 +14,12 @@ export default function (state = initState, {type, payload}) {
   switch (type) {
 
     case LOG_IN:
-      localStorage.setItem('user', JSON.stringify(payload));
-
       return {
         ...state,
         user: payload,
       };
 
-    case LOADING_AUTH:
+    case LOADING_USER:
       return {
         ...state,
         isLoading: payload,

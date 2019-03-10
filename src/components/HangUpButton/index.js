@@ -2,7 +2,7 @@ import React from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {resolveNotification} from 'root/redux-core/actions/notification';
+import {resolveNotification} from 'root/redux-module/actions/notification';
 
 import CallEndIcon from '@material-ui/icons/CallEnd';
 import Fab from '@material-ui/core/Fab';

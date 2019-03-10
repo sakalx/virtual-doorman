@@ -4,8 +4,8 @@ export const promise = {
   FULFILLED: '_FULFILLED',
 };
 
-export const authentication = {
-  LOADING_AUTH: 'LOADING_AUTHENTICATION',
+export const userActionsTypes = {
+  LOADING_USER: 'LOADING_AUTHENTICATION_USER',
   LOG_IN: 'LOG_IN_USER',
   LOG_OUT: 'LOG_OUT_USER',
 };

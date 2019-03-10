@@ -2,7 +2,7 @@ import React from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {logOutUser} from 'root/redux-core/actions/auth';
+import {logOutUser} from 'root/redux-module/actions/auth';
 
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';

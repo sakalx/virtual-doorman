@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {selectBuilding} from 'root/redux-core/actions/building';
+import {selectBuilding} from 'root/redux-module/actions/building';
 
 import useLabelWidth from 'root/hooks/useLabelWidth';
 

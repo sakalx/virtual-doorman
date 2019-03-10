@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {logInUser, onLoadingAuth} from 'root/redux-core/actions/auth';
+import {logInUser, onLoadingUser} from 'root/modules/redux-module/actions/user';
 
-import sigIn from 'root/api/sigIn';
+import {signInWithEmail} from 'root/modules/firebase-module/auth';
 
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
@@ -14,9 +14,9 @@ import {
   FormContainer,
 } from './style';
 
-function LoginForm({logInUser, onLoadingAuth}) {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
+function LoginForm({logInUser, onLoadingUser}) {
+  const [name, setName] = useState('sakals@mail.ua');
+  const [password, setPassword] = useState('666666');
   const [error, setError] = useState(false);
 
   const handleChangeName = ({target}) => {
@@ -28,15 +28,14 @@ function LoginForm({logInUser, onLoadingAuth}) {
   };
 
   const handleLogin = () => {
-    onLoadingAuth(true);
+    onLoadingUser(true);
 
-    sigIn(name, password)
-      .then(user => {
-        user
-          ? logInUser(user)
-          : setError(true);
+    signInWithEmail(name, password)
+      .catch(err => {
+        console.info(err);
+        setError(true);
       })
-      .finally(() => onLoadingAuth(false))
+      .finally(() => onLoadingUser(false))
   };
 
   return (
@@ -80,7 +79,7 @@ function LoginForm({logInUser, onLoadingAuth}) {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   logInUser,
-  onLoadingAuth,
+  onLoadingUser,
 }, dispatch);
 
 export default connect(null, mapDispatchToProps)(LoginForm);

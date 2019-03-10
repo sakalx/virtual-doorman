@@ -2,12 +2,6 @@ import socketIOClient from 'socket.io-client';
 
 const url = 'http://localhost:8000';
 
-// Socket events :
-export const eventName = {
-  newNotification: 'new notification',
-  updateNotification: 'update notification',
-  notification: 'notification',
-};
 
 const socketClient = {
   socket: null,

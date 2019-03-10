@@ -27,7 +27,7 @@ function verifyToken(clientToken, callback) {
 }
 
 
-function verifyUserNameAndPassword(userName, password, callback) {
+function verifyNameAndPassword(userName, password, callback) {
   const user = usersSQLdb.find(userDB => userDB.name === userName);
 
   if (!user) return callback(new Error('User not found'));
@@ -40,18 +40,17 @@ function verifyUserNameAndPassword(userName, password, callback) {
     token: 'create secret token',
     status: 'online',
   };
-
   usersStorage[user.id] = verifiedUser;
 
   return callback(null, verifiedUser);
 }
 
 
-function authenticate(socket, {userName, password, clientToken}, callback) {
+function authenticate(socketClient, {userName, password, clientToken}, callback) {
 
   return clientToken
     ? verifyToken(clientToken, callback)
-    : verifyUserNameAndPassword(userName, password, callback);
+    : verifyNameAndPassword(userName, password, callback);
 }
 
 module.exports = authenticate;
