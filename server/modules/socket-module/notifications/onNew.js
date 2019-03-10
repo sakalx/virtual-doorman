@@ -1,11 +1,11 @@
 module.exports = function (io, notificationsStorage) {
 
   const eventName = require('../eventNames');
-  const sql = require('../../sql');
+  const sql = require('../../sql-module');
 
-  return function (socket) {
+  return function (socketClient) {
     // Socket listening new notification
-    socket.on(eventName.newNotification, function (notification) {
+    socketClient.on(eventName.newNotification, function (notification) {
       // Save to glob variable [notifications]
       const uid = notification.id;
       notificationsStorage[uid] = notification;

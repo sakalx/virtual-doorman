@@ -1,11 +1,11 @@
 module.exports = function (io, notificationsStorage) {
 
   const eventName = require('../eventNames');
-  const sql = require('../../sql');
+  const sql = require('../../sql-module');
 
-  return function (socket) {
+  return function (socketClient) {
     // Socket listening any updates notification
-    socket.on(eventName.updateNotification, function ({uid, payload}) {
+    socketClient.on(eventName.updateNotification, function ({uid, payload}) {
       // Updating glob variable [notifications] by id
       const updatedNotification = notificationsStorage[uid];
       Object.entries(payload).forEach(([key, value]) => {

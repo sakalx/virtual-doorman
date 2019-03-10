@@ -7,8 +7,7 @@ const socketClient = {
   socket: null,
 
   connect(token) {
-    this.socket = socketIOClient.connect(url);
-    this.socket.emit('authentication', token);
+    this.socket = socketIOClient.connect(url, {query: `token=${token}`});
   },
 
   emit(eventName, data) {

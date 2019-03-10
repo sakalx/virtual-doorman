@@ -3,7 +3,6 @@ import 'firebase/auth';
 import firebaseApp from '../initialization';
 
 import socketClient from 'root/modules/socket-module';
-import eventNames from 'root/modules/socket-module/eventNames';
 
 import store from 'root/modules/redux-module/store';
 import {userActionsTypes} from 'root/modules/redux-module/types';
@@ -18,15 +17,6 @@ export const currentUser = () => firebase.auth().currentUser;
 firebaseApp.auth().onAuthStateChanged(user => {
     if (user) {
       getToken().then(idToken => socketClient.connect(idToken));
-
-      socketClient.on(eventNames.authenticated, authenticatedUser => {
-        addUserIntoRedux(authenticatedUser);
-      });
-
-      socketClient.on(eventNames.unauthorized, err => {
-        console.error(err);
-        console.log('There was an error with the authentication:', err.message);
-      });
     } else {
       logOut();
     }
