@@ -1,5 +1,6 @@
-module.exports = function (io, notificationsStorage) {
+module.exports = function (io) {
 
+  const store = require('./store');
   const eventName = require('../eventNames');
   const sql = require('../../sql-module');
 
@@ -8,7 +9,7 @@ module.exports = function (io, notificationsStorage) {
   return function () {
     // Initialization notifications on server from SQL and push to sockets
     if (isInitNotifications) {
-      io.emit(eventName.notification, notificationsStorage);
+      io.emit(eventName.notification, store);
     } else {
       const sqlOnResult = data => {
         const uid = data.id;
@@ -16,11 +17,11 @@ module.exports = function (io, notificationsStorage) {
           [uid]: {...data},
         };
 
-        Object.assign(notificationsStorage, notification);
+        Object.assign(store, notification);
       };
 
       const sqlOnEnd = () => {
-        io.emit(eventName.notification, notificationsStorage);
+        io.emit(eventName.notification, store);
       };
 
       sql.getDataFromTable({
