@@ -1,5 +1,14 @@
 const mysql = require('mysql');
-const db = require('./connection')(mysql);
+const config = require('../../config');
+
+// Creat SQL connection
+const db = mysql.createConnection(config.sql.connection);
+
+// Check connection
+db.connect(function (error) {
+  if (error) throw error;
+  console.log('Connected to SQL db');
+});
 
 // List of SQL tables :
 const table = {

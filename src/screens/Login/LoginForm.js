@@ -4,8 +4,6 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {logInUser, onLoadingUser} from 'root/modules/redux-module/actions/user';
 
-import {signInWithEmail} from 'root/modules/firebase-module/auth';
-
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
 import TextField from '@material-ui/core/TextField';

@@ -6,29 +6,31 @@ const url = 'http://localhost:8000';
 const socketClient = {
   socket: null,
 
-  connect(token) {
-    this.socket = socketIOClient.connect(url, {query: `token=${token}`});
+  connect(user = null) {
+    this.socket = socketIOClient.connect(url, {query: `user=${user}`});
   },
 
   emit(eventName, data) {
-    if (this.socket) {
-      this.socket.emit(eventName, data);
-    }
+    this.socket.emit(eventName, data);
   },
 
   on(eventName, callback) {
-    if (this.socket) {
-      this.socket.on(eventName, data => {
-        callback(data);
-      });
-    }
+    this.socket.on(eventName, data => callback(data))
   },
 
   removeListener(eventName, callback) {
-    if (this.socket) {
-      this.socket.removeListener(eventName, callback);
-    }
+    this.socket.removeListener(eventName, callback);
   },
 };
+
+const user = JSON.stringify({userName: 'sakal', password: 'user-password'})
+
+socketClient.connect(user);
+
+socketClient.on('connection', socket => {
+  console.log('Socket connected ', socket);
+  console.log('Socket request ', socket.request);
+  console.log('Socket handshake ', socket.handshake);
+});
 
 export default socketClient;

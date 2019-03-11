@@ -1,4 +1,5 @@
 import {userActionsTypes} from '../types';
+import socketClient from 'root/modules/socket-module';
 
 const {
   LOADING_USER,
@@ -17,5 +18,12 @@ export function logInUser(user) {
   return {
     type: LOG_IN,
     payload: user,
+  }
+}
+export function logOutUser() {
+  socketClient.socket.close();
+
+  return {
+    type: LOG_OUT,
   }
 }
