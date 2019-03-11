@@ -1,5 +1,3 @@
-const path = require('path');
-
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
@@ -10,8 +8,10 @@ app.use(sessionMiddleware);
 
 // Keep it for testing reason:
 // ===========================================
+const path = require('path');
+
 app.get('/', (req, res) => {
-  console.warn('sessionID ', req.sessionID);
+  console.warn('sessionID from express', req.sessionID);
   //req.session.userName = 'sakal';
   res.sendFile(path.join(__dirname + '/public/index.html'));
 });

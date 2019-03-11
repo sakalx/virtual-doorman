@@ -8,6 +8,7 @@ module.exports = function (server) {
 
   // Sockets
   const initNotifications = require('./notifications/initialization');
+  const initUsers = require('./users/initialization');
   const onNewNotification = require('./notifications/onNew');
   const onUpdateNotification = require('./notifications/onUpdate');
 
@@ -15,6 +16,8 @@ module.exports = function (server) {
   io.on('connection', function (socketClient) {
     console.log('New Socket connected', socketClient.id);
 
+    // NOTE Init list of users
+    initUsers(io);
     // socket.emit('user', userStore[sess.userId]);
 
     //console.warn(socketClient.handshake.headers);

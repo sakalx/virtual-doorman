@@ -1,5 +1,5 @@
 import {userActionsTypes} from '../types';
-import socketClient from 'root/modules/socket-module';
+import socketClient from 'root/api/socket-core';
 
 const {
   LOADING_USER,

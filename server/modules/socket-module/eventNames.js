@@ -1,5 +1,6 @@
 module.exports = {
   newNotification: 'new notification',
-  updateNotification: 'update notification',
   notification: 'notification',
+  updateNotification: 'update notification',
+  users: 'users',
 };

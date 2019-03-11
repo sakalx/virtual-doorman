@@ -8,6 +8,12 @@ const socketClient = {
 
   connect(user = null) {
     this.socket = socketIOClient.connect(url, {query: `user=${user}`});
+
+
+    this.socket.on('users', data => {
+      console.log('Users data ', data);
+
+    });
   },
 
   emit(eventName, data) {
@@ -23,14 +29,9 @@ const socketClient = {
   },
 };
 
-const user = JSON.stringify({userName: 'sakal', password: 'user-password'})
+const user = JSON.stringify({name: 'erik', password: '7777777'});
 
 socketClient.connect(user);
 
-socketClient.on('connection', socket => {
-  console.log('Socket connected ', socket);
-  console.log('Socket request ', socket.request);
-  console.log('Socket handshake ', socket.handshake);
-});
 
 export default socketClient;

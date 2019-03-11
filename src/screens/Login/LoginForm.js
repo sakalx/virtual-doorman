@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {logInUser, onLoadingUser} from 'root/modules/redux-module/actions/user';
+import {logInUser, onLoadingUser} from 'root/redux-core/actions/user';
 
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';

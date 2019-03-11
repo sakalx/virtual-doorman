@@ -13,6 +13,10 @@ const config = {
       password: '2015My0234$',
       database: 'vdmdb',
     },
+    tables: {
+      notifications: 'notification',
+      users: 'users',
+    },
   },
   // Session
   session: {
