@@ -2,7 +2,7 @@ import React from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {resolveNotification} from 'root/redux-module/actions/notification';
+import {resolveNotification} from 'root/redux-core/actions/notification';
 
 import Button from '@material-ui/core/Button';
 

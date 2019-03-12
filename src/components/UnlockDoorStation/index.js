@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {selectDoorStation} from 'root/redux-module/actions/doorStation';
+import {selectDoorStation} from 'root/redux-core/actions/doorStation';
 
 import useLabelWidth from 'root/hooks/useLabelWidth';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import {toggleSnackbar} from 'root/redux-module/actions/snackbar';
+import {toggleSnackbar} from 'root/redux-core/actions/snackbar';
 
 import Snackbar from '@material-ui/core/Snackbar';
 

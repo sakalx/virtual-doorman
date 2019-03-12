@@ -1,12 +1,13 @@
-function isJsonString(str) {
+function parseJson(str) {
+
   try {
-    JSON.parse(str);
+    return JSON.parse(str);
   } catch (e) {
-    return false;
+    return null;
   }
-  return true;
+
 }
 
 module.exports = {
-  isJsonString,
+  parseJson,
 };

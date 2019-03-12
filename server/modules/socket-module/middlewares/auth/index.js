@@ -5,7 +5,7 @@ module.exports = function (io) {
 
   const config = require('../../../../config');
   const sessionStore = require('../../../session-module')['sessionStore'];
-  const isJsonString = require('../../../../lib/json');
+  const parseJson = require('../../../../lib/json')['parseJson'];
   const sigIn = require('./sigIn');
   const validateSession = require('./validateSession');
 
@@ -13,9 +13,9 @@ module.exports = function (io) {
     const session = socket.request.session;
     const cookies = cookie.parse(socket.request.headers.cookie);
     const sid = cookieParser.signedCookie(cookies['connect.sid'], config.session.secret);
-    const userAccess = socket.handshake.query.user;
+    const userAccess = parseJson(socket.handshake.query.user);
 
-    userAccess && isJsonString(userAccess)
+    userAccess
       ? sigIn(userAccess, session, next)
       : sessionStore.load(sid, validateSession(next));
   });

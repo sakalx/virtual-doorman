@@ -2,36 +2,34 @@ import socketIOClient from 'socket.io-client';
 
 const url = 'http://localhost:8000';
 
+const connectAsync = user => {
+  const socket = socketIOClient.connect(url, {query: `user=${user}`});
 
-const socketClient = {
-  socket: null,
+  return new Promise(function (resolve, reject) {
 
-  connect(user = null) {
-    this.socket = socketIOClient.connect(url, {query: `user=${user}`});
-
-
-    this.socket.on('users', data => {
-      console.log('Users data ', data);
-
+    socket.on('connect', () => {
+      socket.emit('client connected');
+      resolve(socket);
     });
-  },
 
-  emit(eventName, data) {
-    this.socket.emit(eventName, data);
-  },
+    socket.on('error', error => reject(`server error ${error}`));
+    socket.on('connect_error', error => reject(`connect error ${error}`));
+    socket.on('connect_timeout', timeout => reject(timeout));
 
-  on(eventName, callback) {
-    this.socket.on(eventName, data => callback(data))
-  },
+    setTimeout(() => {
+      if (!socket.id) reject('not connected')
+    }, 1000);
 
-  removeListener(eventName, callback) {
-    this.socket.removeListener(eventName, callback);
-  },
+
+    // socket.on('disconnect', (reason) => {
+    //   if (reason === 'io server disconnect') {
+    //     // the disconnection was initiated by the server, you need to reconnect manually
+    //     socket.connect();
+    //   }
+    //   // else the socket will automatically try to reconnect
+    // });
+  });
 };
 
-const user = JSON.stringify({name: 'erik', password: '7777777'});
 
-socketClient.connect(user);
-
-
-export default socketClient;
+export default connectAsync;

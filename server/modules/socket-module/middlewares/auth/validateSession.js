@@ -4,9 +4,12 @@ function validateSession(next) {
   return (err, sess) => {
     if (err) return next(new Error(`load session:  ${err}`));
 
-    sess && userStore[sess.userId]
-      ? next()
-      : next(new Error('not authorized'));
+    if (sess && userStore[sess.userId]) {
+      userStore[sess.userId].status = 'online';
+      next();
+    } else {
+      next(new Error('not authorized'));
+    }
   };
 }
 

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {logInUser, onLoadingUser} from 'root/redux-core/actions/user';
+import {connectUser} from 'root/redux-core/actions/socket';
 
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
@@ -12,10 +12,12 @@ import {
   FormContainer,
 } from './style';
 
-function LoginForm({logInUser, onLoadingUser}) {
-  const [name, setName] = useState('sakals@mail.ua');
-  const [password, setPassword] = useState('666666');
+
+function LoginForm({socket, connectUser}) {
+  const [name, setName] = useState('erik');
+  const [password, setPassword] = useState('7777777');
   const [error, setError] = useState(false);
+
 
   const handleChangeName = ({target}) => {
     setName(target.value)
@@ -26,14 +28,10 @@ function LoginForm({logInUser, onLoadingUser}) {
   };
 
   const handleLogin = () => {
-    onLoadingUser(true);
+    const userAccess = JSON.stringify({name, password});
+    connectUser(userAccess);
 
-    signInWithEmail(name, password)
-      .catch(err => {
-        console.info(err);
-        setError(true);
-      })
-      .finally(() => onLoadingUser(false))
+    if (socket.error) setError(true);
   };
 
   return (
@@ -74,10 +72,12 @@ function LoginForm({logInUser, onLoadingUser}) {
   )
 }
 
+const mapStateToProps = ({socket}) => ({
+  socket,
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  logInUser,
-  onLoadingUser,
+  connectUser,
 }, dispatch);
 
-export default connect(null, mapDispatchToProps)(LoginForm);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

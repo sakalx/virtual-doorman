@@ -4,10 +4,14 @@ export const promise = {
   FULFILLED: '_FULFILLED',
 };
 
-export const userActionsTypes = {
-  LOADING_USER: 'LOADING_AUTHENTICATION_USER',
-  LOG_IN: 'LOG_IN_USER',
-  LOG_OUT: 'LOG_OUT_USER',
+export const socketTypes = {
+  SOCKET_CONNECTION: 'SOCKET_CONNECTION',
+  SOCKET_DISCONNECTED: 'SOCKET_DISCONNECTED',
+};
+
+export const usersActionsTypes = {
+  SET_LOGGED_USER: 'SET_LOGGED_USER',
+  SET_USERS: 'SET_LIST_OF_USERS',
 };
 
 export const buildings = {
@@ -19,9 +23,6 @@ export const doorStation = {
   SET_SELECTED_DOOR_STATION: 'SET_SELECTED_DOOR_STATION',
 };
 
-export const operators = {
-  GET_OPERATORS_INFO: 'GET_OPERATORS_INFO',
-};
 
 export const notification = {
   ACCEPT_NOTIFICATION: 'ACCEPT_NOTIFICATION',

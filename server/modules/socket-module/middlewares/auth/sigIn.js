@@ -24,11 +24,7 @@ module.exports = function (user, session, next) {
     const userId = userFromDb.id;
     session.userId = userId;
 
-    userStore[userId] = {
-      id: userId,
-      name: userFromDb.name,
-      status: 'online',
-    };
+    userStore[userId].status = 'online';
     next();
   }
 

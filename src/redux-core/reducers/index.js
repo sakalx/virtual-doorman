@@ -1,24 +1,24 @@
 import {combineReducers} from 'redux';
-import {userActionsTypes} from '../types';
+import {socketTypes} from '../types';
 
 import building from './building';
 import doorStation from './doorStation';
 import notifications from './notification';
-import operators from './operator';
 import snackbar from './snackbar';
-import user from './user';
+import socket from './socket';
+import users from './users';
 
 const appReducer = combineReducers({
   building,
   doorStation,
   notifications,
-  operators,
   snackbar,
-  user,
+  socket,
+  users,
 });
 
 const rootReducer = (state, action) => {
-  if (action.type === userActionsTypes.LOG_OUT) {
+  if (action.type === socketTypes.SOCKET_DISCONNECTED) {
     state = undefined;
   }
 
