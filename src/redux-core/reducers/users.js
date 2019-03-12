@@ -6,25 +6,28 @@ const {
 } = usersActionsTypes;
 
 const initState = {
-  users: {},
-  currentUserId: null,
+  data: {},
+  currentUser: {
+    id: null,
+    name: '',
+    status: ''
+  },
 };
 
 export default function (state = initState, {type, payload}) {
   switch (type) {
+    case SET_USERS:
+      return ({
+        ...state,
+        data: payload,
+      });
 
     case SET_LOGGED_USER:
       return ({
         ...state,
-        currentUserId: payload,
+        currentUser: state.data[payload],
       });
-
-    case SET_USERS:
-      return ({
-        ...state,
-        users: payload,
-      });
-
   }
+
   return state;
 }

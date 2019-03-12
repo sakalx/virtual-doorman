@@ -13,7 +13,7 @@ import {
 } from './style';
 
 
-function LoginForm({socket, connectUser}) {
+function LoginForm({connectUser}) {
   const [name, setName] = useState('erik');
   const [password, setPassword] = useState('7777777');
   const [error, setError] = useState(false);
@@ -30,8 +30,6 @@ function LoginForm({socket, connectUser}) {
   const handleLogin = () => {
     const userAccess = JSON.stringify({name, password});
     connectUser(userAccess);
-
-    if (socket.error) setError(true);
   };
 
   return (
@@ -72,12 +70,8 @@ function LoginForm({socket, connectUser}) {
   )
 }
 
-const mapStateToProps = ({socket}) => ({
-  socket,
-});
-
 const mapDispatchToProps = dispatch => bindActionCreators({
   connectUser,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+export default connect(null, mapDispatchToProps)(LoginForm);

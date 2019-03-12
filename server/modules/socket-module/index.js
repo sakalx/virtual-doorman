@@ -22,13 +22,9 @@ module.exports = function (server) {
     console.log('New Socket connected', socketClient.id);
     const userId = socketClient.request.session.userId;
 
-    socketClient.on('client connected', () => {
-      socketClient.emit(eventName.users, userStore);
-      socketClient.emit(eventName.notifications, notificationsStore);
-      socketClient.emit(eventName.currentUser, userId);
-    });
-
-
+    socketClient.emit(eventName.users, userStore);
+    socketClient.emit(eventName.notifications, notificationsStore);
+    socketClient.emit(eventName.currentUser, userId);
 
 
     //socketClient.emit(eventName.notification, notificationsStore);

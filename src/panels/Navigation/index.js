@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import Button from '@material-ui/core/Button';
@@ -12,12 +11,14 @@ import {
 } from './style';
 
 
-function NavigationPanel({user, logOutUser}) {
+function NavigationPanel({socket, users}) {
+
+  const logout = () => socket.Client.disconnect();
+
   return (
     <Container component={'nav'} square={true} elevation={1}>
       <NavigationContainer>
         <Button color={'primary'}>Home</Button>
-        <Button color={'primary'}>Admin</Button>
         <Button color={'primary'}>Play</Button>
         <Button color={'primary'}>View</Button>
         <Button color={'primary'}>Call</Button>
@@ -32,20 +33,17 @@ function NavigationPanel({user, logOutUser}) {
         style={{padding: '5px 12px'}}
         variant='button'
       >
-        {user.LOGIN_NAME}
+        {users.currentUser.name}
       </Typography>
 
-      <Button color={'primary'} onClick={logOutUser}>Logout</Button>
+      <Button color={'primary'} onClick={logout}>Logout</Button>
     </Container>
   )
 }
 
-const mapStateToProps = ({auth: {user}}) => ({
-  user,
+const mapStateToProps = ({socket, users}) => ({
+  socket,
+  users,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(NavigationPanel);
+export default connect(mapStateToProps, null)(NavigationPanel);

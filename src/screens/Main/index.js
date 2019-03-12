@@ -37,8 +37,9 @@ function MainScreen({
     const _setCurrentUser = userId => setLoggedUser(userId);
 
     // COLLECT DATA
+    // API
     getBuildingData();
-
+    // SOCKETS
     socket.Client.on(eventNames.users, _setUsers);
     socket.Client.on(eventNames.notifications, _setNotification);
     socket.Client.on(eventNames.currentUser, _setCurrentUser);
@@ -85,9 +86,9 @@ function MainScreen({
         Add new notification
       </Button>
 
-      {/*  <Slide direction='right' in={true} mountOnEnter>
+      <Slide direction='right' in={true} mountOnEnter>
         <NavigationPanel/>
-      </Slide>*/}
+      </Slide>
 
       <Slide direction='up' in={true} mountOnEnter>
         <Row>
