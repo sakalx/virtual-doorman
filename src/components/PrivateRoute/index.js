@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {Route} from 'react-router-dom';
 
+import eventNames from 'root/api/socket-core/eventNames';
+
 import {connect} from 'react-redux';
 
 import LoginScreen from 'root/screens/Login';
@@ -11,12 +13,16 @@ function PrivateRoute({component: Component, socket, ...rest}) {
 
   useEffect(() => {
     const _connected = () => setConnect(true);
-    const _error = err => setConnect(false) && console.info(`server error ${err}`);
-    const _connectError = err => setConnect(false) && console.info(`connect error ${err}`);
-    const _timeout = timeout => setConnect(false) && console.info(`timeout ${timeout}`);
-    const _disconnect = reason => setConnect(false) && console.info(`disconnect ${reason}`);
+    const _error = err => setConnect(false) && console.log(`server error ${err}`);
+    const _connectError = err => setConnect(false) && console.log(`connect error ${err}`);
+    const _timeout = timeout => setConnect(false) && console.log(`timeout ${timeout}`);
+    const _disconnect = reason => setConnect(false) && console.log(`disconnect ${reason}`);
 
     if (socket.Client) {
+      if (socket.Client.connected && !connected)  setConnect(true);
+
+      socket.Client.emit(eventNames.userConnected);
+
       socket.Client.on('connect', _connected);
       socket.Client.on('error', _error);
       socket.Client.on('connect_error', _connectError);

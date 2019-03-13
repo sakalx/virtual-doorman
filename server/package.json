@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Server for notification system VDM",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon --ignore modules/session-module/tmp/"
   },
   "dependencies": {
     "cookie": "^0.3.1",

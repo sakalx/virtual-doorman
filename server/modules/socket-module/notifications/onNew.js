@@ -11,7 +11,7 @@ module.exports = function (io, socketClient) {
     store[uid] = notification;
 
     // Push notification to sockets
-    io.emit(eventName.notification, {[uid]: notification});
+    io.emit(eventName.notifications, {[uid]: notification});
 
     // Insert notification to SQL
     sql.insertToTable({

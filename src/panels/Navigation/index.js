@@ -2,6 +2,8 @@ import React from 'react';
 
 import {connect} from 'react-redux';
 
+import eventNames from 'root/api/socket-core/eventNames';
+
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
@@ -13,7 +15,7 @@ import {
 
 function NavigationPanel({socket, users}) {
 
-  const logout = () => socket.Client.disconnect();
+  const logout = () => socket.Client.emit(eventNames.signOut);
 
   return (
     <Container component={'nav'} square={true} elevation={1}>

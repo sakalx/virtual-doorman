@@ -38,7 +38,7 @@ function MainScreen({
 
     // COLLECT DATA
     // API
-    getBuildingData();
+    //getBuildingData();
     // SOCKETS
     socket.Client.on(eventNames.users, _setUsers);
     socket.Client.on(eventNames.notifications, _setNotification);
@@ -53,7 +53,7 @@ function MainScreen({
 
   const handleAddNewNotification = () => {
     const newDummyNotification = _createTestNotification();
-    //socketClient.emit(eventNames.newNotification, newDummyNotification);
+    socket.Client.emit(eventNames.newNotification, newDummyNotification);
   };
 
   function _createTestNotification() {

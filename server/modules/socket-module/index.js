@@ -1,6 +1,6 @@
 module.exports = function (server) {
   const io = require('socket.io')(server);
-  const eventName = require('./eventNames');
+  const eventNames = require('./eventNames');
 
   // Middlewares
   require('./middlewares/initialization')();
@@ -17,23 +17,26 @@ module.exports = function (server) {
   const onNewNotification = require('./notifications/onNew');
   const onUpdateNotification = require('./notifications/onUpdate');
 
-
   io.on('connection', function (socketClient) {
     console.log('New Socket connected', socketClient.id);
-    const userId = socketClient.request.session.userId;
+    const {session} = socketClient.request;
 
-    socketClient.emit(eventName.users, userStore);
-    socketClient.emit(eventName.notifications, notificationsStore);
-    socketClient.emit(eventName.currentUser, userId);
-
-
-    //socketClient.emit(eventName.notification, notificationsStore);
-    //socketClient.emit(eventName.userConnected, userId);
+    // Socket listening when user ready
+    socketClient.on(eventNames.userConnected, () => {
+      socketClient.emit(eventNames.users, userStore);
+      socketClient.emit(eventNames.notifications, notificationsStore);
+      socketClient.emit(eventNames.currentUser, session.userId);
+    });
 
     // Socket listening new notification
-    //onNewNotification(io, socketClient);
+    onNewNotification(io, socketClient);
     // Socket listening any updates notification
-    //onUpdateNotification(io, socketClient);
+    onUpdateNotification(io, socketClient);
+
+    socketClient.on(eventNames.signOut, () => {
+      socketClient.disconnect();
+      session.destroy();
+    });
 
     socketClient.on('disconnect', (reason) => {
       console.warn('Socket disconnected', socketClient.id, reason);
@@ -44,5 +47,6 @@ module.exports = function (server) {
       console.warn('socketClient error :', error);
     });
   });
-
 };
+
+// [TODO] validation incoming data from sockets !!!

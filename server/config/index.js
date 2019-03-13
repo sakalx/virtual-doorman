@@ -3,7 +3,7 @@ const config = {
   // File store
   fileStoreConfig: {
     path: './modules/session-module/tmp/sessions',
-    ttl: 86400000
+    //ttl: 86400000
   },
   // SQL db
   sql: {

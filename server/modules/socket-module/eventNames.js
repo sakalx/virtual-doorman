@@ -1,7 +1,9 @@
 module.exports = {
-  currentUser: 'current user',
-  newNotification: 'new notification',
+  currentUser: 'current_user',
+  newNotification: 'new_notification',
   notifications: 'notifications',
-  updateNotification: 'update notification',
+  signOut: 'sign_out_user',
+  updateNotification: 'update_notification',
+  userConnected: 'user_connected',
   users: 'users',
 };

@@ -14,7 +14,7 @@ module.exports = function (io, socketClient) {
     });
 
     // Push notification to sockets
-    io.emit(eventName.notification, {[uid]: currentNotification});
+    io.emit(eventName.notifications, {[uid]: currentNotification});
 
     // Update notification in SQL
     sql.updateTableById({

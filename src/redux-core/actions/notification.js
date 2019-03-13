@@ -1,6 +1,7 @@
 import {notification} from '../types';
+import store from '../store';
 
-
+import eventNames from 'root/api/socket-core/eventNames';
 
 const {
   ACCEPT_NOTIFICATION,
@@ -17,11 +18,12 @@ export function setNotification(payload) {
 }
 
 export function acceptNotification(uid) {
+  const socketClient = store.getState().socket.Client;
   const payload = {
     'accepted_time': String(+new Date()),
   };
 
-  //socketClient.emit(eventName.updateNotification, {uid, payload});
+  socketClient.emit(eventNames.updateNotification, {uid, payload});
 
   return {
     type: ACCEPT_NOTIFICATION,
@@ -30,11 +32,12 @@ export function acceptNotification(uid) {
 }
 
 export function resolveNotification(uid) {
+  const socketClient = store.getState().socket.Client;
   const payload = {
     'resolved_time': String(+new Date()),
   };
 
-  //socketClient.emit(eventName.updateNotification, {uid, payload});
+  socketClient.emit(eventNames.updateNotification, {uid, payload});
 
   return {
     type: RESOLVE_NOTIFICATION,

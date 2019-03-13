@@ -17,12 +17,12 @@ module.exports = function (user, session, next) {
 
 
   function sqlOnEnd() {
-
     if (!userFromDb) return next(new Error('User not found'));
     if (userFromDb.password !== user.password) return next(new Error('Incorrect password'));
 
     const userId = userFromDb.id;
     session.userId = userId;
+    session.save();
 
     userStore[userId].status = 'online';
     next();
