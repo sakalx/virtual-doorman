@@ -21,13 +21,13 @@ function PrivateRoute({component: Component, socket, ...rest}) {
     if (socket.Client) {
       if (socket.Client.connected && !connected)  setConnect(true);
 
-      socket.Client.emit(eventNames.userConnected);
-
       socket.Client.on('connect', _connected);
       socket.Client.on('error', _error);
       socket.Client.on('connect_error', _connectError);
       socket.Client.on('connect_timeout', _timeout);
       socket.Client.on('disconnect', _disconnect);
+
+      socket.Client.emit(eventNames.userConnected);
     }
 
     return () => {
