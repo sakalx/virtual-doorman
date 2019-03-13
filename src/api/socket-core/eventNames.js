@@ -4,7 +4,6 @@ export const eventNames = {
   notifications: 'notifications',
   signOut: 'sign_out_user',
   updateNotification: 'update_notification',
-  userConnected: 'user_connected',
   users: 'users',
 };
 

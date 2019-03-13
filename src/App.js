@@ -4,29 +4,38 @@ import PrivateRoute from 'root/components/PrivateRoute'
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {connectUser} from 'root/redux-core/actions/socket';
+import {connectingToServer} from 'root/redux-core/actions/socket';
 
 import MainScreen from './screens/Main';
 
 
-function App({connectUser}) {
+function App({socket, connectingToServer}) {
 
   useEffect(() => {
-    connectUser();
+    connectingToServer();
   }, []);
 
   return (
-    <HashRouter>
-      <Switch>
-        <PrivateRoute exact path='/' component={MainScreen}/>
-        <Route render={() => <h1>404 page</h1>}/>
-      </Switch>
-    </HashRouter>
+    <React.Fragment>
+      {socket.fetching && <h1>Loading...</h1>}
+
+      <HashRouter>
+        <Switch>
+          <PrivateRoute exact path='/' component={MainScreen}/>
+          <Route render={() => <h1>404 page</h1>}/>
+        </Switch>
+      </HashRouter>
+
+    </React.Fragment>
   )
 }
 
+const mapStateToProps = ({socket}) => ({
+  socket,
+});
+
 const mapDispatchToProps = dispatch => bindActionCreators({
-  connectUser,
+  connectingToServer,
 }, dispatch);
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

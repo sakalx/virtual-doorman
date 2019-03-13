@@ -3,10 +3,6 @@ function validateUserAccess(userAccess, next) {
 
   try {
     validUserAccess = JSON.parse(userAccess);
-
-    if (typeof validUserAccess.userName !== 'string'
-      || typeof validUserAccess.password !== 'string') throw '';
-
   } catch (e) {
     next(new Error('not valid user access'));
   }

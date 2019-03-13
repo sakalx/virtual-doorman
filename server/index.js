@@ -19,17 +19,17 @@ server.listen(config.port, function () {
 
 // Keep it for testing reason:
 // ===========================================
-/*const path = require('path');
+const path = require('path');
 
 app.get('/', (req, res) => {
   console.warn('sessionID from express', req.sessionID);
   //req.session.userName = 'sakal';
   res.sendFile(path.join(__dirname + '/public/index.html'));
 });
-app.get('/js/vendor.5c3c131e4dd13d728e65.bundle.js', (req, res) => {
-  res.sendFile(path.join(__dirname + '/public/js/vendor.5c3c131e4dd13d728e65.bundle.js'));
+app.get('/js/vendor.d7cb5fc3b89a92bc160a.bundle.js', (req, res) => {
+  res.sendFile(path.join(__dirname + '/public/js/vendor.d7cb5fc3b89a92bc160a.bundle.js'));
 });
-app.get('/js/index.e9bee6695f665d5ef216.bundle.js', (req, res) => {
-  res.sendFile(path.join(__dirname + '/public/js/index.e9bee6695f665d5ef216.bundle.js'));
-});*/
+app.get('/js/index.85bd47048611e5b1de21.bundle.js', (req, res) => {
+  res.sendFile(path.join(__dirname + '/public/js/index.85bd47048611e5b1de21.bundle.js'));
+});
 // ===========================================

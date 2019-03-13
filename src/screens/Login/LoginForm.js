@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {connectUser} from 'root/redux-core/actions/socket';
+import {connectingToServer} from 'root/redux-core/actions/socket';
 
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
@@ -13,7 +13,7 @@ import {
 } from './style';
 
 
-function LoginForm({connectUser}) {
+function LoginForm({connectingToServer}) {
   const [name, setName] = useState('erik');
   const [password, setPassword] = useState('7777777');
   const [error, setError] = useState(false);
@@ -29,7 +29,7 @@ function LoginForm({connectUser}) {
 
   const handleLogin = () => {
     const userAccess = JSON.stringify({name, password});
-    connectUser(userAccess);
+    connectingToServer(userAccess);
   };
 
   return (
@@ -71,7 +71,7 @@ function LoginForm({connectUser}) {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  connectUser,
+  connectingToServer,
 }, dispatch);
 
 export default connect(null, mapDispatchToProps)(LoginForm);

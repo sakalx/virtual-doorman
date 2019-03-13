@@ -8,7 +8,7 @@ import snackbar from './snackbar';
 import socket from './socket';
 import users from './users';
 
-const appReducer = combineReducers({
+const rootReducer = combineReducers({
   building,
   doorStation,
   notifications,
@@ -17,12 +17,12 @@ const appReducer = combineReducers({
   users,
 });
 
-const rootReducer = (state, action) => {
+/*const rootReducer = (state, action) => {
   if (action.type === socketTypes.SOCKET_DISCONNECTED) {
     state = undefined;
   }
 
   return appReducer(state, action)
-};
+};*/
 
 export default rootReducer;

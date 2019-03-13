@@ -21,12 +21,12 @@ module.exports = function (server) {
     console.log('New Socket connected', socketClient.id);
     const {session} = socketClient.request;
 
-    // Socket listening when user ready
-    socketClient.on(eventNames.userConnected, () => {
-      socketClient.emit(eventNames.users, userStore);
-      socketClient.emit(eventNames.notifications, notificationsStore);
-      socketClient.emit(eventNames.currentUser, session.userId);
-    });
+
+    socketClient.emit('foo', 'userStore');
+
+    socketClient.emit(eventNames.users, userStore);
+    socketClient.emit(eventNames.notifications, notificationsStore);
+    socketClient.emit(eventNames.currentUser, session.userId);
 
     // Socket listening new notification
     onNewNotification(io, socketClient);
