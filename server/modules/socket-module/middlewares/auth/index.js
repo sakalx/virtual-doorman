@@ -1,6 +1,7 @@
 module.exports = function (io) {
+  const tough = require('tough-cookie');
+  const Cookie = tough.Cookie;
 
-  const cookie = require('cookie');
   const cookieParser = require('cookie-parser');
 
   const config = require('../../../../config');
@@ -11,8 +12,9 @@ module.exports = function (io) {
 
   io.use(function (socket, next) {
     const session = socket.request.session;
-    const cookies = cookie.parse(socket.request.headers.cookie);
-    const sid = cookieParser.signedCookie(cookies['connect.sid'], config.session.secret);
+    const cookie = Cookie.parse(socket.request.headers.cookie);
+
+    const sid = cookieParser.signedCookie(cookie['connect.sid'], config.session.secret);
     const userAccess = parseJson(socket.handshake.query.user);
 
     userAccess

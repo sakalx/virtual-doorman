@@ -56,7 +56,7 @@ function LoginForm({connectingToServer}) {
         />
       </FormContainer>
 
-      <Collapse in={Boolean(name.length > 3)} style={{width: '100%'}}>
+      <Collapse in={Boolean(name && password)} style={{width: '100%'}}>
         <Button
           color='primary'
           fullWidth
