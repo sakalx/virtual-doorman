@@ -2,9 +2,7 @@ import React, {useState} from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {logInUser, onLoadingAuth} from 'root/redux-core/actions/auth';
-
-import sigIn from 'root/api/sigIn';
+import {connectingToServer} from 'root/redux-core/actions/socket';
 
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
@@ -14,10 +12,12 @@ import {
   FormContainer,
 } from './style';
 
-function LoginForm({logInUser, onLoadingAuth}) {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
+
+function LoginForm({connectingToServer}) {
+  const [name, setName] = useState('erik');
+  const [password, setPassword] = useState('7777777');
   const [error, setError] = useState(false);
+
 
   const handleChangeName = ({target}) => {
     setName(target.value)
@@ -28,15 +28,8 @@ function LoginForm({logInUser, onLoadingAuth}) {
   };
 
   const handleLogin = () => {
-    onLoadingAuth(true);
-
-    sigIn(name, password)
-      .then(user => {
-        user
-          ? logInUser(user)
-          : setError(true);
-      })
-      .finally(() => onLoadingAuth(false))
+    const userAccess = JSON.stringify({name, password});
+    connectingToServer(userAccess);
   };
 
   return (
@@ -63,7 +56,7 @@ function LoginForm({logInUser, onLoadingAuth}) {
         />
       </FormContainer>
 
-      <Collapse in={Boolean(name.length > 3)} style={{width: '100%'}}>
+      <Collapse in={Boolean(name && password)} style={{width: '100%'}}>
         <Button
           color='primary'
           fullWidth
@@ -77,10 +70,8 @@ function LoginForm({logInUser, onLoadingAuth}) {
   )
 }
 
-
 const mapDispatchToProps = dispatch => bindActionCreators({
-  logInUser,
-  onLoadingAuth,
+  connectingToServer,
 }, dispatch);
 
 export default connect(null, mapDispatchToProps)(LoginForm);

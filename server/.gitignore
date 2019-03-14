@@ -1,1 +1,3 @@
 /node_modules
+/public
+/modules/session-module/tmp

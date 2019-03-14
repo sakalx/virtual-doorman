@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
 
+import eventNames from 'root/api/socket-core/eventNames';
+
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {getBuildingData} from 'root/redux-core/actions/building';
-import {getOperatorsInfo} from 'root/redux-core/actions/operator';
+import {setLoggedUser, setUsers} from 'root/redux-core/actions/users';
 import {setNotification} from 'root/redux-core/actions/notification';
-
-import socketClient, {eventName} from 'root/api/socket';
 
 import Button from '@material-ui/core/Button';
 import Slide from '@material-ui/core/Slide';
@@ -22,32 +22,43 @@ import {
   MainSection,
 } from './style';
 
+
 function MainScreen({
                       getBuildingData,
-                      getOperatorsInfo,
+                      setLoggedUser,
                       setNotification,
+                      setUsers,
+                      socket,
                     }) {
 
   useEffect(() => {
-    const _setNotification = data => setNotification(data);
+    const _setNotification = notification => setNotification(notification);
+    const _setUsers = users => setUsers(users);
+    const _setCurrentUser = userId => setLoggedUser(userId);
 
     // COLLECT DATA
-    getBuildingData();
-    getOperatorsInfo();
+    // API
+    //getBuildingData();
+    // SOCKETS
+    socket.Client.on(eventNames.users, _setUsers);
+    socket.Client.on(eventNames.notifications, _setNotification);
+    socket.Client.on(eventNames.currentUser, _setCurrentUser);
 
-    // Listening notification-socket
-    socketClient.on(eventName.notification, _setNotification);
-    return () => socketClient.removeListener(eventName.notification, _setNotification);
+    return () => {
+      socket.Client.removeListener(eventNames.users, _setUsers);
+      socket.Client.removeListener(eventNames.notifications, _setNotification);
+      socket.Client.removeListener(eventNames.currentUser, _setCurrentUser);
+    };
   }, []);
 
   const handleAddNewNotification = () => {
     const newDummyNotification = _createTestNotification();
-    socketClient.emit(eventName.newNotification, newDummyNotification);
+    socket.Client.emit(eventNames.newNotification, newDummyNotification);
   };
 
   function _createTestNotification() {
     const uuidv4 = () =>
-      ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
       );
 
@@ -66,6 +77,7 @@ function MainScreen({
 
     return dummyNotification;
   }
+
 
   return (
     <main>
@@ -96,10 +108,15 @@ function MainScreen({
   )
 }
 
+const mapStateToProps = ({socket}) => ({
+  socket,
+});
+
 const mapDispatchToProps = dispatch => bindActionCreators({
   getBuildingData,
-  getOperatorsInfo,
+  setLoggedUser,
   setNotification,
+  setUsers,
 }, dispatch);
 
-export default connect(null, mapDispatchToProps)(MainScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

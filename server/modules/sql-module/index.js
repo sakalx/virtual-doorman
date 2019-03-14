@@ -1,23 +1,14 @@
 const mysql = require('mysql');
+const config = require('../../config');
 
 // Creat SQL connection
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '2015My0234$',
-  database: 'vdmdb'
-});
+const db = mysql.createConnection(config.sql.connection);
 
 // Check connection
 db.connect(function (error) {
   if (error) throw error;
   console.log('Connected to SQL db');
 });
-
-// List of SQL tables :
-const table = {
-  notifications: 'notification',
-};
 
 
 // [INSERT] to table :
@@ -71,9 +62,24 @@ function getDataFromTable({table, callBackResult, callBackEnd}) {
 }
 
 
+// [SELECT] all data from row table by id :
+function getSqlSelectRowFromTable(table, key = '') {
+  return `SELECT * FROM ${table} WHERE ${key} = ?`;
+}
+
+function getDataFromRow({table, option, callBackResult, callBackEnd}) {
+  const sql = getSqlSelectRowFromTable(table, option.key);
+
+  db.query(sql, [option.value])
+    .on('result', callBackResult)
+    .on('end', callBackEnd);
+}
+
+
 module.exports = {
-  table,
+  table: config.sql.tables,
   insertToTable,
   updateTableById,
   getDataFromTable,
+  getDataFromRow,
 };

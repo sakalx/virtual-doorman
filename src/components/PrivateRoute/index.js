@@ -6,16 +6,16 @@ import {connect} from 'react-redux';
 import LoginScreen from 'root/screens/Login';
 
 
-function PrivateRoute({component: Component, auth, ...rest}) {
+function PrivateRoute({component: Component, socket, ...rest}) {
   return (
-    (auth.user && auth.user.ID)
+    socket.Client && socket.Client.connected
       ? <Route{...rest} render={props => <Component {...props}/>}/>
       : <LoginScreen/>
   )
 }
 
-const mapStateToProps = ({auth}) => ({
-  auth,
+const mapStateToProps = ({socket}) => ({
+  socket,
 });
 
 export default connect(mapStateToProps)(PrivateRoute)

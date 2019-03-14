@@ -10,6 +10,16 @@ import muiTheme from './theme';
 
 import App from './App';
 
+// // [NOTE] Only keep it for testing reason for creat session on server:
+// fetch('http://localhost:8000', {
+//   mode: "no-cors", // no-cors, cors, *same-origin
+// })
+//   .then(response => response.json())
+//   .then(response => console.info(response))
+//   .catch(err => console.log(err));
+// =====================================================
+
+
 // [TODO] add React.memo
 ReactDOM.render(
   <React.Fragment>
